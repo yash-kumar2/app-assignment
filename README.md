@@ -80,7 +80,13 @@ app-assignment/
    ```bash
    npm install
    ```
-3. Run the development server:
+3. Configure environment:
+   Copy `.env.example` to `.env` to set the API URL.
+   ```bash
+   # Windows (Powershell)
+   Copy-Item .env.example .env
+   ```
+4. Run the development server:
    ```bash
    npm run web
    # Or for mobile:
