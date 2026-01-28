@@ -42,15 +42,12 @@ def stream_video(video_id):
     if not video:
         return jsonify({"message": "Video not found"}), 404
 
-    # Validate token is short-lived, signed, and matches this video
     if not verify_playback_token(token=token, video_id=video_id):
         return jsonify({"message": "Invalid or expired playback token"}), 403
 
-    # Resolve upstream URL
     youtube_id = video.get_youtube_id()
     upstream_url = get_video_upstream_url(youtube_id)
 
-    # Proxy the stream
     headers = {}
     if "Range" in request.headers:
         headers["Range"] = request.headers["Range"]
@@ -75,7 +72,6 @@ def stream_video(video_id):
         headers=headers_to_forward,
     )
     
-    # Explicitly set Content-Length if available from upstream
     if "Content-Length" in req.headers:
         response.headers["Content-Length"] = req.headers["Content-Length"]
         

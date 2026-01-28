@@ -21,7 +21,6 @@ export default function VideoScreen() {
     const load = async () => {
       if (!id) return;
       try {
-        // 1. Get playback token
         const playRes = await apiRequest(`/video/${id}/play`, {
           method: 'POST',
           auth: true,
@@ -32,8 +31,6 @@ export default function VideoScreen() {
         const playData = await playRes.json();
         const token = playData.playback_token as string;
 
-        // 2. Construct proxy URL directly
-        // The frontend never sees the upstream URL, only the token-protected backend stream.
         const proxyUrl = `${API_URL}/video/${id}/stream?token=${encodeURIComponent(token)}`;
 
         setStreamUrl(proxyUrl);
