@@ -3,7 +3,7 @@ import { ActivityIndicator, Button, StyleSheet, Text, View } from 'react-native'
 import { useLocalSearchParams } from 'expo-router';
 import { Video, ResizeMode, VideoRef } from 'expo-av';
 
-import { apiRequest } from '@/lib/api';
+import { apiRequest, API_URL } from '@/lib/api';
 
 type StreamResponse = {
   stream_url: string;
@@ -32,16 +32,11 @@ export default function VideoScreen() {
         const playData = await playRes.json();
         const token = playData.playback_token as string;
 
-        // 2. Exchange token for opaque stream URL
-        const streamRes = await apiRequest(`/video/${id}/stream?token=${encodeURIComponent(token)}`, {
-          method: 'GET',
-          auth: true,
-        });
-        if (!streamRes.ok) {
-          throw new Error('Unable to get stream URL');
-        }
-        const streamData: StreamResponse = await streamRes.json();
-        setStreamUrl(streamData.stream_url);
+        // 2. Construct proxy URL directly
+        // The frontend never sees the upstream URL, only the token-protected backend stream.
+        const proxyUrl = `${API_URL}/video/${id}/stream?token=${encodeURIComponent(token)}`;
+
+        setStreamUrl(proxyUrl);
       } catch (e: any) {
         setError(e.message ?? 'Failed to load video');
       } finally {

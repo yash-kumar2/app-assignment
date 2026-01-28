@@ -13,15 +13,14 @@ DRM, etc.
 from urllib.parse import quote
 
 
-def build_masked_stream_url(youtube_id: str) -> str:
-    """Return a masked, embed-safe stream URL for the client.
+def get_video_upstream_url(youtube_id: str) -> str:
+    """Return the upstream video source URL for the backend to proxy.
 
-    The YouTube ID is never sent to the client – instead, we generate a stable
-    internal URL that could be backed by a proxy or player service.
+    In a real system, this might generate a signed URL for an S3 bucket or
+    fetch a direct stream URL from a provider API.
     """
-    # In a real implementation this would be something like:
-    #   https://player.yourdomain.com/embed/<opaque-id>
-    # where `<opaque-id>` does NOT reveal the YouTube ID.
-    opaque = quote(youtube_id, safe="")
-    return f"https://player.example.com/embed/{opaque}"
+    # For this assignment, we use a reliable sample video (Big Buck Bunny)
+    # because expo-av needs a direct media file (mp4/m3u8), and youtube-dl/
+    # yt-dlp is too heavy/unreliable for this simple demo scope.
+    return "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
 
